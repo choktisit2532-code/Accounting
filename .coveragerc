@@ -1,0 +1,11 @@
+[run]
+source = personal_finance
+omit =
+    */migrations/*
+    */seed_data.py
+    */tests/*
+
+[report]
+show_missing = true
+skip_covered = true
+precision = 0

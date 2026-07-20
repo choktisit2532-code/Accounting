@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#3157f6">
+    <title>สมัครสมาชิก — Smart Finance 2.0</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/style.css?v=20260720.2">
+</head>
+<body class="auth-body">
+    <main class="auth-shell">
+        <section class="auth-showcase" aria-label="แนะนำ Smart Finance">
+            <a class="brand brand-light" href="/" aria-label="Smart Finance 2.0">
+                <span class="smart-mark" aria-hidden="true">
+                    <svg viewBox="0 0 48 48"><path d="M13 15.5C13 10.8 17.1 8 23.2 8h10.3l-4.2 6.2h-7.2c-2.2 0-3.4.8-3.4 2.1 0 1.5 1.3 2 5.5 2.8 7.4 1.4 10.8 4.1 10.8 9.8C35 36 29.6 40 21.5 40H10l4.2-6.2h8.3c4.1 0 6.4-1.3 6.4-3.8 0-2-1.7-2.9-6.7-3.8C16 25.1 13 21.9 13 15.5Z"/><circle cx="36" cy="11" r="4"/></svg>
+                </span>
+                <span class="brand-copy"><strong>Smart Finance</strong><small>2.0 · THINK AHEAD</small></span>
+            </a>
+            <div class="showcase-copy">
+                <span class="eyebrow eyebrow-light"><i class="fa-solid fa-sparkles"></i> YOUR FINANCIAL CO-PILOT</span>
+                <h1>มองเงินได้ชัด<br>วางอนาคตได้ไกล</h1>
+                <p>ผู้ช่วยการเงินที่รวมบัญชี รายรับ–รายจ่าย งบประมาณ และเป้าหมายไว้ในมุมมองเดียว</p>
+            </div>
+            <div class="showcase-cards" aria-hidden="true">
+                <div class="preview-card preview-main"><span>มูลค่าทรัพย์สินสุทธิ</span><strong>฿128,450</strong><div class="preview-line"></div></div>
+                <div class="preview-card preview-float"><i class="fa-solid fa-arrow-trend-up"></i><div><span>อัตราออม</span><strong>24.8%</strong></div></div>
+                <div class="preview-orbit"></div>
+            </div>
+            <div class="trust-row"><span><i class="fa-solid fa-shield-halved"></i> ข้อมูลปลอดภัย</span><span><i class="fa-solid fa-bolt"></i> ใช้งานง่าย</span><span><i class="fa-solid fa-wand-magic-sparkles"></i> AI ช่วยบันทึก</span></div>
+        </section>
+
+        <section class="auth-form-side">
+            <div class="mobile-brand">
+                <span class="smart-mark"><svg viewBox="0 0 48 48"><path d="M13 15.5C13 10.8 17.1 8 23.2 8h10.3l-4.2 6.2h-7.2c-2.2 0-3.4.8-3.4 2.1 0 1.5 1.3 2 5.5 2.8 7.4 1.4 10.8 4.1 10.8 9.8C35 36 29.6 40 21.5 40H10l4.2-6.2h8.3c4.1 0 6.4-1.3 6.4-3.8 0-2-1.7-2.9-6.7-3.8C16 25.1 13 21.9 13 15.5Z"/><circle cx="36" cy="11" r="4"/></svg></span>
+                <strong>Smart Finance 2.0</strong>
+            </div>
+            <div class="auth-card">
+                <div class="auth-header">
+                    <span class="auth-step">START SMART</span>
+                    <h2 id="page-title">เริ่มต้นเส้นทางการเงิน<br>ที่ชัดเจนกว่าเดิม</h2>
+                    <p>สร้างบัญชีเพื่อรวมทุกเรื่องเงินไว้ใน Smart Finance</p>
+                </div>
+                <div id="error-message" class="alert alert-danger hidden" role="alert"></div>
+                <div id="success-message" class="alert alert-success hidden" role="status"></div>
+                <form id="register-form" class="auth-form">
+                    <div class="form-group">
+                        <label for="name">ชื่อ–นามสกุล</label>
+                        <div class="input-with-icon"><i class="fa-regular fa-user"></i><input type="text" id="name" autocomplete="name" minlength="2" maxlength="150" required placeholder="ชื่อที่ต้องการให้เราเรียก"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">อีเมล</label>
+                        <div class="input-with-icon"><i class="fa-regular fa-envelope"></i><input type="email" id="email" autocomplete="email" required placeholder="name@example.com"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">รหัสผ่าน</label>
+                        <div class="password-wrapper input-with-icon">
+                            <i class="fa-solid fa-lock"></i>
+                            <input type="password" id="password" autocomplete="new-password" minlength="8" maxlength="72" required placeholder="อย่างน้อย 8 ตัวอักษร">
+                            <button type="button" id="toggle-password" class="toggle-btn" aria-label="แสดงหรือซ่อนรหัสผ่าน"><i class="fa-regular fa-eye"></i></button>
+                        </div>
+                    </div>
+                    <button id="submit-btn" type="submit" class="btn btn-primary btn-block"><span>สร้างบัญชี Smart Finance</span><i class="fa-solid fa-arrow-right"></i></button>
+                </form>
+                <div class="auth-footer">มีบัญชีอยู่แล้ว? <a href="/login">เข้าสู่ระบบ <i class="fa-solid fa-arrow-right"></i></a></div>
+            </div>
+        </section>
+    </main>
+    <script src="/static/auth.js?v=20260720.2"></script>
+    <script src="/static/register.js?v=20260720.2"></script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+services:
+  - type: web
+    name: personal-finance-api
+    runtime: docker
+    region: singapore
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    autoDeployTrigger: commit
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: AUTO_CREATE_TABLES
+        value: "false"
+      - key: RECEIPT_STORAGE_BACKEND
+        value: supabase
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: SUPABASE_STORAGE_BUCKET
+        value: receipts
+      - key: MAX_RECEIPT_DIMENSION
+        value: "1600"
+      - key: MAX_UPLOAD_BYTES
+        value: "5242880"
+      - key: MAX_RECEIPT_PIXELS
+        value: "40000000"
+      - key: RECEIPT_WEBP_QUALITY
+        value: "80"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: PERSONAL_FINANCE_DATABASE_URL
+        sync: false
+      - key: ALLOWED_ORIGINS
+        sync: false
+      - key: LINE_CHANNEL_ACCESS_TOKEN
+        sync: false
+      - key: LINE_CHANNEL_SECRET
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GEMINI_MODEL
+        value: gemini-3.1-flash-lite

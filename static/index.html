@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#3157f6">
+    <title>Smart Finance 2.0 — ศูนย์บัญชาการการเงินอัจฉริยะ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/style.css?v=20260720.2">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+</head>
+<body class="app-body">
+    <div class="app-shell">
+        <header class="topbar">
+            <a class="brand" href="#overview" aria-label="Smart Finance 2.0 หน้าหลัก">
+                <span class="smart-mark" aria-hidden="true">
+                    <svg viewBox="0 0 48 48" role="img">
+                        <path d="M13 15.5C13 10.8 17.1 8 23.2 8h10.3l-4.2 6.2h-7.2c-2.2 0-3.4.8-3.4 2.1 0 1.5 1.3 2 5.5 2.8 7.4 1.4 10.8 4.1 10.8 9.8C35 36 29.6 40 21.5 40H10l4.2-6.2h8.3c4.1 0 6.4-1.3 6.4-3.8 0-2-1.7-2.9-6.7-3.8C16 25.1 13 21.9 13 15.5Z"/>
+                        <circle cx="36" cy="11" r="4"/>
+                    </svg>
+                </span>
+                <span class="brand-copy">
+                    <strong>Smart Finance</strong>
+                    <small>2.0 · THINK AHEAD</small>
+                </span>
+            </a>
+
+            <nav class="primary-nav" aria-label="เมนูหลัก">
+                <a class="active" href="#overview"><i class="fa-solid fa-grid-2"></i><span>ภาพรวม</span></a>
+                <a href="#accounts"><i class="fa-solid fa-wallet"></i><span>บัญชี</span></a>
+                <a href="#insights"><i class="fa-solid fa-chart-line"></i><span>วิเคราะห์</span></a>
+                <a href="#planning"><i class="fa-solid fa-bullseye"></i><span>แผนการเงิน</span></a>
+                <a href="#ledger"><i class="fa-solid fa-clock-rotate-left"></i><span>รายการ</span></a>
+            </nav>
+
+            <div class="topbar-user">
+                <div class="user-avatar"><i class="fa-solid fa-user"></i></div>
+                <div class="user-info">
+                    <div id="username-display" class="user-name">กำลังโหลด…</div>
+                    <div class="user-role"><span></span>บัญชีพร้อมใช้งาน</div>
+                </div>
+                <button id="logout-btn" class="icon-button logout-btn" type="button" aria-label="ออกจากระบบ" title="ออกจากระบบ"><i class="fa-solid fa-arrow-right-from-bracket"></i></button>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <section id="overview" class="hero-section finance-header">
+                <div class="hero-copy">
+                    <span class="eyebrow"><i class="fa-solid fa-wallet"></i> ภาพรวมการเงินของฉัน</span>
+                    <h1 id="greeting-text">สวัสดี</h1>
+                    <p id="current-date"></p>
+                </div>
+                <div class="hero-actions">
+                    <div class="month-navigator" aria-label="เลือกเดือนที่ต้องการดู">
+                        <button id="period-prev" class="month-arrow" type="button" aria-label="เดือนก่อน"><i class="fa-solid fa-chevron-left"></i></button>
+                        <label class="period-control" for="dashboard-period">
+                            <span>เดือนที่กำลังดู</span>
+                            <input type="month" id="dashboard-period">
+                        </label>
+                        <button id="period-next" class="month-arrow" type="button" aria-label="เดือนถัดไป"><i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                    <button class="btn btn-primary record-btn" type="button" data-open-modal="tx-modal"><i class="fa-solid fa-plus"></i><span>บันทึกรายการ</span></button>
+                </div>
+            </section>
+
+            <section class="financial-cockpit" aria-label="ภาพรวมสถานะทางการเงิน">
+                <article class="monthly-overview-card">
+                    <div class="monthly-overview-head">
+                        <div>
+                            <span>สรุปประจำเดือน</span>
+                            <h2 id="summary-period-display">เดือนที่เลือก</h2>
+                        </div>
+                        <span class="data-source-pill"><i class="fa-solid fa-database"></i> ยอดจริงจากรายการ</span>
+                    </div>
+                    <div class="month-summary-grid">
+                        <div class="summary-cell summary-income">
+                            <span class="summary-icon"><i class="fa-solid fa-arrow-down"></i></span>
+                            <div><span id="income-period-label">รายรับ</span><strong id="month-income">฿0.00</strong><small>เงินเข้าของเดือนนี้</small></div>
+                        </div>
+                        <div class="summary-cell summary-expense">
+                            <span class="summary-icon"><i class="fa-solid fa-arrow-up"></i></span>
+                            <div><span id="expense-period-label">รายจ่าย</span><strong id="month-expense">฿0.00</strong><small>เงินออกของเดือนนี้</small></div>
+                        </div>
+                        <div class="summary-cell summary-net">
+                            <span class="summary-icon"><i class="fa-solid fa-scale-balanced"></i></span>
+                            <div><span>คงเหลือสุทธิเดือนนี้</span><strong id="month-cashflow">฿0.00</strong><small id="savings-rate">อัตราออม 0%</small></div>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="balance-hero compact-balance-card">
+                    <div class="balance-orbit orbit-one"></div>
+                    <div class="balance-head">
+                        <span class="metric-label"><i class="fa-solid fa-vault"></i> เงินคงเหลือทุกบัญชี</span>
+                        <span class="live-pill"><i></i> ปัจจุบัน</span>
+                    </div>
+                    <div id="total-balance" class="hero-amount">฿0.00</div>
+                    <p>ยอดสะสมจริง ไม่ใช่ยอดเฉพาะเดือน</p>
+                    <a href="#accounts" class="balance-link">ดูบัญชีทั้งหมด <i class="fa-solid fa-arrow-right"></i></a>
+                </article>
+
+                <article class="smart-assistant-card compact-assistant-card">
+                    <div class="assistant-top">
+                        <span class="assistant-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></span>
+                        <div><strong>Smart Assistant</strong><small>บันทึกรายการได้เร็วขึ้น</small></div>
+                        <span class="ai-badge">AI</span>
+                    </div>
+                    <p id="line-pair-desc">เชื่อมต่อ LINE เพื่อให้ AI ช่วยอ่านข้อมูล แล้วรอคุณยืนยันก่อนบันทึกทุกครั้ง</p>
+                    <div class="assistant-actions">
+                        <button id="get-pairing-code-btn" class="btn btn-line" type="button"><i class="fa-brands fa-line"></i> เชื่อมต่อ LINE</button>
+                        <button id="unlink-line-btn" class="btn btn-quiet hidden" type="button">ยกเลิกการเชื่อมต่อ</button>
+                        <button id="pairing-code-box" class="pairing-code-display hidden" type="button">PF-XXXXXXXX</button>
+                    </div>
+                </article>
+            </section>
+
+            <section id="accounts" class="section-block">
+                <div class="section-heading">
+                    <div><span class="section-kicker">MONEY HUB</span><h2>บัญชีของฉัน</h2><p>เห็นภาพเงินทุกก้อนจากที่เดียว</p></div>
+                    <button class="btn btn-secondary" type="button" data-open-modal="wallet-modal"><i class="fa-solid fa-plus"></i> เพิ่มบัญชี</button>
+                </div>
+                <div id="wallets-list" class="wallets-wrapper"></div>
+            </section>
+
+            <section id="insights" class="section-block">
+                <div class="section-heading">
+                    <div><span class="section-kicker">MONTHLY ACTIVITY</span><h2>เงินของฉันไปทางไหน</h2><p>ยอดรวม กราฟ และรายการด้านล่างใช้เดือนและประเภทเดียวกัน</p></div>
+                    <div class="finance-type-tabs" role="tablist" aria-label="เลือกประเภทรายการ">
+                        <button type="button" class="active" data-dashboard-type="expense" role="tab" aria-selected="true"><i class="fa-solid fa-arrow-up"></i> รายจ่าย</button>
+                        <button type="button" data-dashboard-type="income" role="tab" aria-selected="false"><i class="fa-solid fa-arrow-down"></i> รายรับ</button>
+                        <button type="button" data-dashboard-type="transfer" role="tab" aria-selected="false"><i class="fa-solid fa-right-left"></i> โอนเงิน</button>
+                    </div>
+                </div>
+                <div class="finance-focus-grid">
+                    <article class="panel category-panel finance-category-panel">
+                        <div class="panel-header">
+                            <div><span class="panel-index">01</span><h3 id="category-panel-title">สัดส่วนรายจ่าย</h3></div>
+                            <button id="category-manager-btn" class="btn btn-quiet compact-btn" type="button"><i class="fa-solid fa-tags"></i> จัดหมวดหมู่</button>
+                        </div>
+                        <div class="category-layout">
+                            <div class="category-chart-wrap">
+                                <canvas id="categoryChart"></canvas>
+                                <div id="category-total-box" class="category-total-box"><span id="category-total-label">รวมรายจ่าย</span><strong id="category-total">฿0.00</strong></div>
+                                <p id="category-empty" class="empty-state hidden">ยังไม่มีข้อมูลในเดือนนี้</p>
+                            </div>
+                            <div id="category-breakdown-list" class="category-breakdown-list"></div>
+                        </div>
+                    </article>
+                    <article class="panel recent-panel finance-list-panel">
+                        <div class="panel-header">
+                            <div><span class="panel-index">02</span><h3 id="recent-period-title">รายการในเดือนที่เลือก</h3></div>
+                            <a class="text-link" href="#ledger">ดูทั้งหมด <i class="fa-solid fa-arrow-right"></i></a>
+                        </div>
+                        <div class="recent-total"><span id="recent-total-label">รายจ่ายรวม</span><strong id="recent-expense-total">฿0.00</strong></div>
+                        <div id="transactions-list" class="transaction-list"></div>
+                    </article>
+                    <article class="panel trend-panel finance-trend-panel">
+                        <div class="panel-header">
+                            <div><span class="panel-index">03</span><h3 id="daily-chart-title">กระแสเงินรายวัน</h3></div>
+                            <div class="chart-header-tools">
+                                <div class="chart-view-toggle" role="group" aria-label="เลือกช่วงแสดงกราฟ">
+                                    <button type="button" class="active" data-cashflow-view="day" aria-pressed="true">ดูรายวัน</button>
+                                    <button type="button" data-cashflow-view="month" aria-pressed="false">ดูรายเดือน</button>
+                                </div>
+                                <div class="legend-pills"><span class="legend-income"><i></i>รายรับ</span><span class="legend-expense"><i></i>รายจ่าย</span></div>
+                            </div>
+                        </div>
+                        <div class="daily-chart-totals" id="cashflow-totals" aria-label="ยอดรวมช่วงที่แสดง">
+                            <div><span id="daily-total-income-label">รายรับเดือนนี้</span><strong id="daily-total-income" class="income-text">฿0.00</strong></div>
+                            <div><span id="daily-total-expense-label">รายจ่ายเดือนนี้</span><strong id="daily-total-expense" class="expense-text">฿0.00</strong></div>
+                            <div><span id="daily-total-net-label">สุทธิเดือนนี้</span><strong id="daily-total-net">฿0.00</strong></div>
+                        </div>
+                        <div class="daily-chart-scroll"><div class="chart-container daily-chart-container"><canvas id="trendChart"></canvas></div></div>
+                    </article>
+                </div>
+            </section>
+
+            <section id="planning" class="section-block planning-studio">
+                <div class="section-heading">
+                    <div><span class="section-kicker">PLANNING STUDIO</span><h2>เปลี่ยนแผนให้เป็นความก้าวหน้า</h2><p>กำหนดขอบเขตการใช้เงินและติดตามเป้าหมายสำคัญ</p></div>
+                    <div class="heading-actions">
+                        <button class="btn btn-secondary" type="button" data-open-modal="budget-modal"><i class="fa-solid fa-sliders"></i> ตั้งงบ</button>
+                        <button class="btn btn-primary" type="button" data-open-modal="savings-modal"><i class="fa-solid fa-bullseye"></i> สร้างเป้าหมาย</button>
+                    </div>
+                </div>
+                <div class="planning-grid">
+                    <article class="panel plan-panel budget-panel">
+                        <div class="panel-header">
+                            <div class="plan-title"><span class="plan-icon"><i class="fa-solid fa-gauge-high"></i></span><div><h3>Budget Guard</h3><p>งบประมาณเดือนที่เลือก</p></div></div>
+                        </div>
+                        <div id="budgets-list"></div>
+                    </article>
+                    <article class="panel plan-panel savings-panel">
+                        <div class="panel-header">
+                            <div class="plan-title"><span class="plan-icon"><i class="fa-solid fa-seedling"></i></span><div><h3>Goal Journey</h3><p>เป้าหมายการออมของคุณ</p></div></div>
+                        </div>
+                        <p class="panel-subtitle">ยอดสะสมใช้ติดตามความก้าวหน้า และไม่หักจากบัญชีอัตโนมัติ</p>
+                        <div id="savings-list"></div>
+                    </article>
+                </div>
+            </section>
+
+            <section id="ledger" class="section-block panel history-panel">
+                <div class="section-heading history-heading">
+                    <div><span class="section-kicker">SMART LEDGER</span><h2>ประวัติธุรกรรม</h2><p>ค้นหา กรอง แก้ไข และตรวจสอบทุกการเคลื่อนไหว</p><span class="build-badge">ระบบรุ่น 20260720.2</span></div>
+                    <button id="export-pdf-btn" class="btn btn-secondary" type="button"><i class="fa-solid fa-file-pdf"></i> ส่งออกรายงาน PDF</button>
+                </div>
+                <form id="history-filter-form" class="history-filters">
+                    <label><span>ประเภท</span><select id="history-type" aria-label="ประเภทธุรกรรม"><option value="">ทั้งหมด</option><option value="income">รายรับ</option><option value="expense">รายจ่าย</option><option value="transfer">โอนเงิน</option></select></label>
+                    <label><span>ตั้งแต่วันที่</span><input type="date" id="history-start" aria-label="วันที่เริ่มต้น"></label>
+                    <label><span>ถึงวันที่</span><input type="date" id="history-end" aria-label="วันที่สิ้นสุด"></label>
+                    <label class="search-field"><span>ค้นหารายละเอียด</span><input type="search" id="history-search" maxlength="100" placeholder="เช่น อาหาร, ค่าเดินทาง"></label>
+                    <button class="btn btn-primary filter-btn" type="submit"><i class="fa-solid fa-magnifying-glass"></i> ค้นหา</button>
+                </form>
+                <div id="history-filter-status" class="history-filter-status" aria-live="polite">กำลังโหลดรายการ…</div>
+                <div class="history-summary" aria-label="ยอดรวมตามตัวกรอง">
+                    <div><span>รายรับรวม</span><strong id="history-total-income" class="income-text">฿0.00</strong></div>
+                    <div><span>รายจ่ายรวม</span><strong id="history-total-expense" class="expense-text">฿0.00</strong></div>
+                    <div><span>สุทธิ</span><strong id="history-total-net">฿0.00</strong></div>
+                    <small>ไม่รวมยอดตั้งต้นและรายการปรับยอดของระบบ</small>
+                </div>
+                <div id="history-list" class="transaction-list history-list"></div>
+            </section>
+        </main>
+
+        <nav class="mobile-dock" aria-label="เมนูสำหรับมือถือ">
+            <a href="#overview"><i class="fa-solid fa-house"></i><span>หน้าแรก</span></a>
+            <a href="#insights"><i class="fa-solid fa-chart-simple"></i><span>วิเคราะห์</span></a>
+            <button type="button" data-open-modal="tx-modal" aria-label="เพิ่มรายการ"><i class="fa-solid fa-plus"></i></button>
+            <a href="#planning"><i class="fa-solid fa-bullseye"></i><span>แผน</span></a>
+            <a href="#ledger"><i class="fa-solid fa-clock-rotate-left"></i><span>รายการ</span></a>
+        </nav>
+    </div>
+
+    <div id="tx-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="tx-modal-title">
+        <div class="modal-content">
+            <div class="modal-header"><h2 id="tx-modal-title">บันทึกรายรับ-รายจ่าย</h2><button class="modal-close" type="button" data-close-modal="tx-modal">&times;</button></div>
+            <form id="tx-form">
+                <div class="form-group"><label for="tx-type">ประเภทรายการ</label><select id="tx-type" required><option value="expense">รายจ่าย</option><option value="income">รายรับ</option><option value="transfer">โอนเงินระหว่างบัญชี</option></select></div>
+                <div class="form-group"><label for="tx-amount">จำนวนเงิน (บาท)</label><input type="number" id="tx-amount" step="0.01" min="0.01" required></div>
+                <div class="form-group" id="tx-category-group"><label for="tx-category_id">หมวดหมู่</label><select id="tx-category_id"></select></div>
+                <div class="form-group"><label id="tx-account-label" for="tx-account_id">บัญชีที่ใช้</label><select id="tx-account_id" required></select></div>
+                <div class="form-group hidden" id="tx-to-account-group"><label for="tx-to_account_id">บัญชีปลายทาง</label><select id="tx-to_account_id"></select></div>
+                <div class="form-group"><label for="tx-date">วันที่</label><input type="date" id="tx-date" required></div>
+                <div class="form-group"><label for="tx-note">รายละเอียด</label><input type="text" id="tx-note" maxlength="1000"></div>
+                <div class="form-group" id="receipt-group"><label for="tx-receipt">ใบเสร็จ (JPEG, PNG, WebP ไม่เกิน 5 MB)</label><input type="file" id="tx-receipt" accept="image/jpeg,image/png,image/webp"></div>
+                <div class="modal-footer"><button type="button" class="btn btn-secondary" data-close-modal="tx-modal">ยกเลิก</button><button type="submit" id="tx-submit-btn" class="btn btn-primary">บันทึกรายการ</button></div>
+            </form>
+        </div>
+    </div>
+
+    <div id="wallet-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="wallet-modal-title">
+        <div class="modal-content">
+            <div class="modal-header"><h2 id="wallet-modal-title">สร้างบัญชีใหม่</h2><button class="modal-close" type="button" data-close-modal="wallet-modal">&times;</button></div>
+            <form id="wallet-form">
+                <div class="form-group"><label for="wallet-name">ชื่อบัญชี</label><input type="text" id="wallet-name" maxlength="100" required placeholder="เช่น เงินสด, KBank"></div>
+                <div class="form-group"><label for="wallet-type">ประเภท</label><select id="wallet-type" required><option value="cash">เงินสด</option><option value="bank">ธนาคาร</option><option value="credit_card">บัตรเครดิต</option><option value="investment">การลงทุน</option><option value="other">อื่น ๆ</option></select></div>
+                <div class="form-group"><label for="wallet-balance">ยอดตั้งต้น</label><input type="number" id="wallet-balance" step="0.01" value="0.00" required><small class="field-help">ระบบจะสร้างรายการยอดตั้งต้นเพื่อให้ประวัติตรงกับยอดบัญชี</small></div>
+                <div class="modal-footer"><button type="button" class="btn btn-secondary" data-close-modal="wallet-modal">ยกเลิก</button><button type="submit" class="btn btn-primary">สร้างบัญชี</button></div>
+            </form>
+        </div>
+    </div>
+
+    <div id="budget-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="budget-modal-title">
+        <div class="modal-content">
+            <div class="modal-header"><h2 id="budget-modal-title">ตั้งงบประมาณรายเดือน</h2><button class="modal-close" type="button" data-close-modal="budget-modal">&times;</button></div>
+            <form id="budget-form">
+                <div class="form-group"><label for="budget-category_id">หมวดรายจ่าย</label><select id="budget-category_id" required></select></div>
+                <div class="form-group"><label for="budget-limit">วงเงินสูงสุด</label><input type="number" id="budget-limit" min="0.01" step="0.01" required></div>
+                <div class="form-row"><div class="form-group"><label for="budget-month">เดือน</label><select id="budget-month" required></select></div><div class="form-group"><label for="budget-year">ปี ค.ศ.</label><input type="number" id="budget-year" min="2000" max="2200" required></div></div>
+                <div class="modal-footer"><button type="button" class="btn btn-secondary" data-close-modal="budget-modal">ยกเลิก</button><button type="submit" class="btn btn-primary">บันทึกงบประมาณ</button></div>
+            </form>
+        </div>
+    </div>
+
+    <div id="savings-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="savings-modal-title">
+        <div class="modal-content">
+            <div class="modal-header"><h2 id="savings-modal-title">สร้างเป้าหมายการออม</h2><button class="modal-close" type="button" data-close-modal="savings-modal">&times;</button></div>
+            <form id="savings-form">
+                <div class="form-group"><label for="savings-name">ชื่อเป้าหมาย</label><input type="text" id="savings-name" maxlength="150" required></div>
+                <div class="form-group"><label for="savings-target">จำนวนเงินเป้าหมาย</label><input type="number" id="savings-target" min="0.01" step="0.01" required></div>
+                <div class="form-group"><label for="savings-current">ยอดสะสมปัจจุบัน</label><input type="number" id="savings-current" min="0" step="0.01" value="0.00" required></div>
+                <div class="form-group"><label for="savings-date">วันที่เป้าหมาย</label><input type="date" id="savings-date" required></div>
+                <div class="modal-footer"><button type="button" class="btn btn-secondary" data-close-modal="savings-modal">ยกเลิก</button><button type="submit" class="btn btn-primary">สร้างเป้าหมาย</button></div>
+            </form>
+        </div>
+    </div>
+
+    <div id="category-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="category-modal-title">
+        <div class="modal-content">
+            <div class="modal-header"><h2 id="category-modal-title">จัดการหมวดหมู่</h2><button class="modal-close" type="button" data-close-modal="category-modal">&times;</button></div>
+            <form id="category-form" class="category-form">
+                <input type="text" id="category-name" maxlength="100" required placeholder="ชื่อหมวดหมู่">
+                <select id="category-type"><option value="expense">รายจ่าย</option><option value="income">รายรับ</option></select>
+                <input type="color" id="category-color" value="#6B7280" aria-label="สีหมวดหมู่">
+                <button type="submit" class="btn btn-primary">เพิ่ม</button>
+            </form>
+            <div id="category-manager-list" class="category-manager-list"></div>
+        </div>
+    </div>
+
+    <div id="receipt-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="receipt-modal-title">
+        <div class="modal-content receipt-content">
+            <div class="modal-header"><h2 id="receipt-modal-title">ใบเสร็จ / สลิป</h2><button class="modal-close" type="button" data-close-modal="receipt-modal">&times;</button></div>
+            <img id="receipt-img-view" src="" alt="รูปใบเสร็จ">
+        </div>
+    </div>
+
+    <div id="toast" class="toast hidden" role="status"></div>
+    <script src="/static/auth.js?v=20260720.2"></script>
+    <script src="/static/app.js?v=20260720.2"></script>
+</body>
+</html>
