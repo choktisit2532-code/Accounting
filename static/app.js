@@ -557,12 +557,22 @@ function renderCategoryChart(data) {
     byId("category-total-box").classList.toggle("hidden", data.length === 0);
     byId("category-total").textContent = money(data.reduce((sum, item) => sum + Number(item.amount || 0), 0));
     if (!data.length) return;
+    const options = chartOptions();
+    options.cutout = "68%";
+    // The ranked list beside the chart already contains every label, colour,
+    // percentage, and amount. Hiding Chart.js' legend prevents long Thai
+    // category names from wrapping above and squeezing the doughnut.
+    options.plugins.legend = {display: false};
     categoryChart = new Chart(byId("categoryChart"), {
         type: "doughnut",
         data: {labels: data.map(item => item.category_name), datasets: [{
-            data: data.map(item => item.amount), backgroundColor: data.map(item => safeColor(item.color)), borderWidth: 0
+            data: data.map(item => item.amount),
+            backgroundColor: data.map(item => safeColor(item.color)),
+            borderColor: "#FFFFFF",
+            borderWidth: 3,
+            hoverOffset: 5
         }]},
-        options: {...chartOptions(), cutout: "65%"}
+        options
     });
 }
 

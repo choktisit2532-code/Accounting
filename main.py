@@ -24,7 +24,7 @@ from personal_finance.routers.transactions import router as transactions_router
 
 logger = logging.getLogger("personal_finance")
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s %(message)s")
-APP_BUILD = "20260720.2"
+APP_BUILD = "20260720.3"
 
 
 @asynccontextmanager

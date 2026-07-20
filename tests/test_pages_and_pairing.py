@@ -7,17 +7,17 @@ from personal_finance.tests.test_ledger import expense_category
 def test_health_and_static_pages(client):
     health = client.get("/health")
     assert health.status_code == 200
-    assert health.json()["build"] == "20260720.2"
+    assert health.json()["build"] == "20260720.3"
     for path in ["/", "/login", "/register", "/dashboard"]:
         response = client.get(path)
         assert response.status_code == 200
         assert response.headers["cache-control"] == "no-cache, no-store"
-    static_response = client.get("/static/app.js?v=20260720.2")
+    static_response = client.get("/static/app.js?v=20260720.3")
     assert static_response.status_code == 200
     assert "no-store" in static_response.headers["cache-control"]
     dashboard = client.get("/dashboard").text
-    assert "ระบบรุ่น 20260720.2" in dashboard
-    assert "/static/app.js?v=20260720.2" in dashboard
+    assert "ระบบรุ่น 20260720.3" in dashboard
+    assert "/static/app.js?v=20260720.3" in dashboard
     assert 'data-dashboard-type="expense"' in dashboard
     assert 'id="period-prev"' in dashboard
     assert 'id="category-breakdown-list"' in dashboard
