@@ -1,0 +1,8 @@
+.hidden{display:none!important}
+.liff-gate{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:10px;padding:30px;color:#44516b}
+.liff-gate strong{font-size:20px;color:#17233d}
+.liff-gate span{max-width:410px}
+.liff-gate a{margin-top:10px;background:#3157f6;color:#fff;text-decoration:none;padding:11px 18px;border-radius:12px}
+.spinner{width:42px;height:42px;border:4px solid #dce4ff;border-top-color:#3157f6;border-radius:50%;animation:spin .8s linear infinite}
+.gate-icon{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:#ffe5e9;color:#b52d48;font-weight:800;font-size:26px}
+@keyframes spin{to{transform:rotate(360deg)}}
