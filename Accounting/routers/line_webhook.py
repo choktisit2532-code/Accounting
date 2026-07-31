@@ -76,6 +76,12 @@ Expense: อาหารและเครื่องดื่ม, การเ
 ของใช้ในบ้าน, รายจ่ายอื่น ๆ.
 Income: เงินเดือน, ธุรกิจส่วนตัว, การลงทุน, รายรับอื่น ๆ.
 Classification rules:
+- Thai income signals include รายรับ, รับเงิน, ได้รับเงิน, เงินเข้า, ลูกค้าจ่าย,
+  and a sale/service followed by ได้ plus an amount (for example "ขายของได้ 40"
+  or "ซ่อมคอมได้ 500"). Classify these as income.
+- Do not treat negated phrases such as ไม่ได้, ไม่ได้รับ, or ยังไม่ได้ as income.
+- The word ได้ by itself is not always income: purchases such as "ซื้อกาแฟได้ 40 บาท"
+  are still expenses.
 - Buying, paying, spending, fees, bills, food, or shopping are expenses, even when a bank account is named.
 - Use transfer only when the user explicitly moves money between two of their own accounts.
 - A transfer must include two distinct account names: account_name is the source and to_account_name is the destination.
@@ -87,6 +93,24 @@ Classification rules:
 - Never infer transfer merely because a bank account, bank name, account number, promptpay, or slip is present.
 Never invent an amount or bank account. If uncertain, use null or unknown.
 """.strip()
+
+THAI_INCOME_STRONG_PATTERNS = (
+    r"(?:^|\s)รายรับ(?:\s|$)",
+    r"(?:^|\s)(?:ได้)?รับเงิน",
+    r"(?:^|\s)เงินเข้า",
+    r"(?:^|\s)ลูกค้า(?:โอน|จ่าย)",
+    r"(?:ขาย|ซ่อม|รับจ้าง|บริการ|ส่งของ|ทำงาน)[^.!?\n]{0,80}?ได้\s*(?:เงิน\s*)?[\d๐-๙][\d๐-๙,.]*",
+    r"(?:^|\s)ได้(?:เงิน|ค่าจ้าง|ค่าแรง|ค่าซ่อม|ค่าบริการ|ค่าของ)\s*[\d๐-๙][\d๐-๙,.]*",
+)
+THAI_INCOME_NEGATION_PATTERN = re.compile(r"(?:ไม่|ยังไม่)\s*(?:ได้|ได้รับ|ได้เงิน|รับเงิน)")
+
+
+def text_has_clear_income_signal(text: str | None) -> bool:
+    """Return True only for explicit Thai money-in language."""
+    normalized = re.sub(r"\s+", " ", str(text or "").strip().casefold())
+    if not normalized or THAI_INCOME_NEGATION_PATTERN.search(normalized):
+        return False
+    return any(re.search(pattern, normalized) for pattern in THAI_INCOME_STRONG_PATTERNS)
 
 
 def verify_line_signature(body: bytes, signature: str | None) -> None:
@@ -569,6 +593,8 @@ def normalize_analysis(
     tx_type = str(raw.get("type") or "").lower()
     if tx_type not in VALID_TYPES:
         return None
+    if tx_type != "transfer" and text_has_clear_income_signal(original_text):
+        tx_type = "income"
     try:
         amount = Decimal(str(raw.get("amount"))).quantize(Decimal("0.01"))
     except (InvalidOperation, TypeError):
@@ -586,7 +612,11 @@ def normalize_analysis(
     return {
         "type": tx_type,
         "amount": str(amount),
-        "category": str(raw.get("category") or "")[:100] or None,
+        "category": (
+            "รายรับอื่น ๆ"
+            if tx_type == "income" and str(raw.get("type") or "").lower() != "income"
+            else str(raw.get("category") or "")[:100] or None
+        ),
         "account_name": str(raw.get("account_name") or "")[:100] or None,
         "to_account_name": str(raw.get("to_account_name") or "")[:100] or None,
         "sender_name": str(raw.get("sender_name") or "")[:150] or None,
